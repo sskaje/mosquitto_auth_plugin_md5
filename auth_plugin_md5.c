@@ -68,8 +68,6 @@ int mosquitto_auth_plugin_version(void)
 int mosquitto_auth_plugin_init(void *user_data, struct mosquitto_auth_opt *auth_opts, int auth_opt_count)
 {
 	int i=0;
-	fprintf(stderr, "Hello, init. count=%d\n", auth_opt_count);
-	fprintf(stderr, "ss:%s\n", auth_opts[0].key);
 	for (; i<auth_opt_count; i++) {
 		fprintf(stderr, "AuthOptions: key=%s, val=%s\n", auth_opts[i].key, auth_opts[i].value);
 		if (!strncmp(auth_opts[i].key, "md5_topic_prefix", 16)) {
