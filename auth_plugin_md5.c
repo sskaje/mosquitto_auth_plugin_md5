@@ -1,5 +1,3 @@
-#define MQAP_DEBUG 1
-
 #include <string.h>
 #include <stdio.h>
 #include <malloc.h> 
@@ -69,7 +67,9 @@ int mosquitto_auth_plugin_init(void *user_data, struct mosquitto_auth_opt *auth_
 {
 	int i=0;
 	for (; i<auth_opt_count; i++) {
+#ifdef MQAP_DEBUG
 		fprintf(stderr, "AuthOptions: key=%s, val=%s\n", auth_opts[i].key, auth_opts[i].value);
+#endif
 		if (!strncmp(auth_opts[i].key, "md5_topic_prefix", 16)) {
 			md5_topic_prefix = auth_opts[i].value;
 			md5_topic_prefix_size = strlen(auth_opts[i].value);
