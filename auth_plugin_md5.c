@@ -20,6 +20,9 @@ char *md5_topic_suffix;
 
 int md5_is_client(const char* username) 
 {
+	if (username == NULL) {
+		return 0;
+	}
 	if (strncmp(username, md5_client_user_prefix, md5_client_user_prefix_size) == 0) {
 		return 1;
 	} else {
@@ -29,6 +32,9 @@ int md5_is_client(const char* username)
 
 int md5_is_server(const char* username) 
 {
+	if (username == NULL) {
+		return 0;
+	}
 	if (strncmp(username, md5_server_user_prefix, md5_server_user_prefix_size) == 0) {
 		return 1;
 	} else {
@@ -63,7 +69,7 @@ int mosquitto_auth_plugin_version(void)
 	return MOSQ_AUTH_PLUGIN_VERSION;
 }
 
-int mosquitto_auth_plugin_init(void *user_data, struct mosquitto_auth_opt *auth_opts, int auth_opt_count)
+int mosquitto_auth_plugin_init(void **user_data, struct mosquitto_auth_opt *auth_opts, int auth_opt_count)
 {
 	int i=0;
 	for (; i<auth_opt_count; i++) {
@@ -94,22 +100,22 @@ int mosquitto_auth_plugin_init(void *user_data, struct mosquitto_auth_opt *auth_
 	return MOSQ_ERR_SUCCESS;
 }
 
-int mosquitto_auth_plugin_cleanup(void *user_data, struct mosquitto_auth_opt *auth_opts, int auth_opt_count)
+int mosquitto_auth_plugin_cleanup(void **user_data, struct mosquitto_auth_opt *auth_opts, int auth_opt_count)
 {
 	return MOSQ_ERR_SUCCESS;
 }
 
-int mosquitto_auth_security_init(void *user_data, struct mosquitto_auth_opt *auth_opts, int auth_opt_count, bool reload)
+int mosquitto_auth_security_init(void **user_data, struct mosquitto_auth_opt *auth_opts, int auth_opt_count, bool reload)
 {
 	return MOSQ_ERR_SUCCESS;
 }
 
-int mosquitto_auth_security_cleanup(void *user_data, struct mosquitto_auth_opt *auth_opts, int auth_opt_count, bool reload)
+int mosquitto_auth_security_cleanup(void **user_data, struct mosquitto_auth_opt *auth_opts, int auth_opt_count, bool reload)
 {
 	return MOSQ_ERR_SUCCESS;
 }
 
-int mosquitto_auth_acl_check(void *user_data, const char *username, const char *topic, int access)
+int mosquitto_auth_acl_check(void **user_data, const char *username, const char *topic, int access)
 {
 	if (md5_is_client(username) && access == MOSQ_ACL_READ && md5_is_valid_client_topic(username, topic)) {
 		return MOSQ_ERR_SUCCESS;
@@ -119,7 +125,7 @@ int mosquitto_auth_acl_check(void *user_data, const char *username, const char *
 	return MOSQ_ERR_ACL_DENIED;
 }
 
-int mosquitto_auth_unpwd_check(void *user_data, const char *username, const char *password)
+int mosquitto_auth_unpwd_check(void **user_data, const char *username, const char *password)
 {
 #ifdef MQAP_DEBUG
 	fprintf(stderr, "mosquitto_auth_unpwd_check: username=%s, password=%s\n", username, password);
@@ -178,7 +184,7 @@ int mosquitto_auth_unpwd_check(void *user_data, const char *username, const char
 	return MOSQ_ERR_AUTH;
 }
 
-int mosquitto_auth_psk_key_get(void *user_data, const char *hint, const char *identity, char *key, int max_key_len)
+int mosquitto_auth_psk_key_get(void **user_data, const char *hint, const char *identity, char *key, int max_key_len)
 {
 	return MOSQ_ERR_AUTH;
 }
