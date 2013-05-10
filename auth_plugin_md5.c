@@ -127,12 +127,13 @@ int mosquitto_auth_acl_check(void **user_data, const char *username, const char 
 
 int mosquitto_auth_unpwd_check(void **user_data, const char *username, const char *password)
 {
+	if (username == NULL || password == NULL) {
+		return MOSQ_ERR_AUTH;
+	}
 #ifdef MQAP_DEBUG
 	fprintf(stderr, "mosquitto_auth_unpwd_check: username=%s, password=%s\n", username, password);
 #endif
-	if (password == NULL) {
-		return MOSQ_ERR_AUTH;
-	}
+	
 	int flag_hash = 0;
 	char *hash_seed;
 
